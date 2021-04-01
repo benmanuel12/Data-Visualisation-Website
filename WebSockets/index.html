@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebSocket Client</title>
+    <script src="style.css"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <script src="luxon.js"></script>
+</head>
+
+<body>
+    <h1>Weather Forecasts</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="text-center">Armagh</h2>
+                <div class="row text-center  h-100" id="resultdiv1">
+                    <div class="col-md-6 h-100" id="datadiv1"></div>
+                    <div class="col-md-6 h-100" id="sentimentdiv1"></div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h2 class="text-center">Braemar</h2>
+                <div class="row text-center" id="resultdiv2">
+                    <div class="col-md-6" id="datadiv2"></div>
+                    <div class="col-md-6" id="sentimentdiv2"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="text-center">Camborne</h2>
+                <div class="row text-center" id="resultdiv3">
+                    <div class="col-md-6" id="datadiv3"></div>
+                    <div class="col-md-6" id="sentimentdiv3"></div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h2 class="text-center">Durham</h2>
+                <div class="row text-center" id="resultdiv4">
+                    <div class="col-md-6" id="datadiv4"></div>
+                    <div class="col-md-6" id="sentimentdiv4"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row text-center">
+            <div class="col-md-12">
+                <h2 class="text-center">Heathrow</h2>
+                <div class="row text-center" id="resultdiv5">
+                    <div class="col-md-6" id="datadiv5"></div>
+                    <div class="col-md-6" id="sentimentdiv5"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var DateTime = luxon.DateTime;
+
+        let numericalData = {};
+        let predictionData = {};
+        let sentimentData = {};
+
+        let gotNumerical = false;
+        let gotPrediction = false;
+        let gotSentiment = false;
+
+        let ArmaghmaxScatter = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Max Mean Temp'
+        };
+
+        let ArmaghminScatter = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Min Mean Temp'
+        };
+
+        let BraemarmaxScatter = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Max Mean Temp'
+        };
+
+        let BraemarminScatter = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Min Mean Temp'
+        };
+
+        let CambornemaxScatter = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Max Mean Temp'
+        };
+
+        let CamborneminScatter = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Min Mean Temp'
+        };
+
+        let DurhammaxScatter = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Max Mean Temp'
+        };
+
+        let DurhamminScatter = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Min Mean Temp'
+        };
+
+        let HeathrowmaxScatter = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Max Mean Temp'
+        };
+
+        let HeathrowminScatter = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Min Mean Temp'
+        };
+
+        let ArmaghmaxScatterPrediction = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Max Mean Temp Prediction'
+        };
+
+        let ArmaghminScatterPrediction = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Min Mean Temp Prediction'
+        };
+
+        let BraemarmaxScatterPrediction = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Max Mean Temp Prediction'
+        };
+
+        let BraemarminScatterPrediction = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Min Mean Temp Prediction'
+        };
+
+        let CambornemaxScatterPrediction = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Max Mean Temp Prediction'
+        };
+
+        let CamborneminScatterPrediction = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Min Mean Temp Prediction'
+        };
+
+        let DurhammaxScatterPrediction = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Max Mean Temp Prediction'
+        };
+
+        let DurhamminScatterPrediction = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Min Mean Temp Prediction'
+        };
+
+        let HeathrowmaxScatterPrediction = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Max Mean Temp Prediction'
+        };
+
+        let HeathrowminScatterPrediction = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Min Mean Temp Prediction'
+        };
+
+
+        let Armaghpie = [{
+            values: [0, 0, 0, 0],
+            labels: ["Neutral", "Negative", "Positive", "Mixed"],
+            type: 'pie'
+        }];
+
+        let Braemarpie = [{
+            values: [0, 0, 0, 0],
+            labels: ["Neutral", "Negative", "Positive", "Mixed"],
+            type: 'pie'
+        }];
+
+        let Cambornepie = [{
+            values: [0, 0, 0, 0],
+            labels: ["Neutral", "Negative", "Positive", "Mixed"],
+            type: 'pie'
+        }];
+
+        let Durhampie = [{
+            values: [0, 0, 0, 0],
+            labels: ["Neutral", "Negative", "Positive", "Mixed"],
+            type: 'pie'
+        }];
+
+        let Heathrowpie = [{
+            values: [0, 0, 0, 0],
+            labels: ["Neutral", "Negative", "Positive", "Mixed"],
+            type: 'pie'
+        }];
+
+        let layout = {
+            height: 400,
+            width: 500
+        };
+
+
+        //Open connection
+        let connection = new WebSocket("wss://3yiievlsmk.execute-api.us-east-1.amazonaws.com/production");
+
+        connection.onopen = function(event) {
+            console.log("Connected: " + JSON.stringify(event));
+            requestData(5);
+        };
+
+        //Send message to server
+        function requestData(count, location) {
+
+            console.log("Attempting to request data from server")
+
+            //Create message to be sent to server
+            let numericalObject = {
+                action: "requestData",
+                type: "numerical"
+            };
+
+            //Send message object
+            connection.send(JSON.stringify(numericalObject));
+
+            //Create message to be sent to server
+            let predictionObject = {
+                action: "requestData",
+                type: "prediction"
+            };
+
+            //Send message object
+            connection.send(JSON.stringify(predictionObject));
+
+            //Create message to be sent to server
+            let sentimentObject = {
+                action: "requestData",
+                type: "sentiment"
+            };
+
+            //Send message object
+            connection.send(JSON.stringify(sentimentObject));
+        }
+
+        //Output messages from the server
+        connection.onmessage = function(msg) {
+            console.log("Message received: " + msg.data);
+            let input = JSON.parse(msg.data);
+            let data = input[0];
+            let message = input[1];
+            let type = input[2];
+            if (message == "request") {
+                if (type == "numerical") {
+                    numericalData = data
+                    console.log("got numerical data")
+                    gotNumerical = true;
+                } else if (type == "prediction") {
+                    predictionData = data
+                    console.log("got prediction data")
+                    gotPrediction = true;
+                } else if (type == "sentiment") {
+                    sentimentData = data
+                    console.log("got sentiment data")
+                    gotSentiment = true;
+                }
+
+                if ((gotNumerical) && (gotPrediction) && (gotSentiment)) {
+                    // create graphs
+                    console.log("all set for graphs")
+                    constructGraphs(numericalData, predictionData)
+                    constructPies(sentimentData);
+                }
+            } else if (message == "update") {
+                console.log("Latest database entries recieved")
+                updateGraphs(data[0], data[1]);
+                updatePies(data[2]);
+            }
+        }
+
+        //Log errors
+        connection.onerror = function(error) {
+            try {
+                console.log("WebSocket Error: " + JSON.stringify(error, ["message", "arguments", "type", "name"]));
+            } catch (e) {
+                // Attempting to avoid Cross Origin Script issues
+                console.log(e);
+                throw e;
+            }
+        }
+
+
+        function constructGraphs(numericalData, predictionData) {
+            let ArmaghArray = numericalData[0].Items;
+            let BraemarArray = numericalData[1].Items;
+            let CamborneArray = numericalData[2].Items;
+            let DurhamArray = numericalData[3].Items;
+            let HeathrowArray = numericalData[4].Items;
+
+            let ArmaghPredictionsMax = predictionData[0].Items[0].Data.predictions[0].mean;
+            let BraemarPredictionsMax = predictionData[1].Items[0].Data.predictions[0].mean;
+            let CambornePredictionsMax = predictionData[2].Items[0].Data.predictions[0].mean;
+            let DurhamPredictionsMax = predictionData[3].Items[0].Data.predictions[0].mean;
+            let HeathrowPredictionsMax = predictionData[4].Items[0].Data.predictions[0].mean;
+
+            let ArmaghPredictionsMin = predictionData[0].Items[1].Data.predictions[0].mean;
+            let BraemarPredictionsMin = predictionData[1].Items[1].Data.predictions[0].mean;
+            let CambornePredictionsMin = predictionData[2].Items[1].Data.predictions[0].mean;
+            let DurhamPredictionsMin = predictionData[3].Items[1].Data.predictions[0].mean;
+            let HeathrowPredictionsMin = predictionData[4].Items[1].Data.predictions[0].mean;
+
+            for (let i = 0; i < ArmaghArray.length; i++) {
+                ArmaghmaxScatter.x.push(ArmaghArray[i].ObservationTime);
+                ArmaghminScatter.x.push(ArmaghArray[i].ObservationTime);
+                ArmaghmaxScatter.y.push(ArmaghArray[i].MaxMeanTemp);
+                ArmaghminScatter.y.push(ArmaghArray[i].MinMeanTemp);
+            }
+
+            for (let i = 0; i < BraemarArray.length; i++) {
+                BraemarmaxScatter.x.push(BraemarArray[i].ObservationTime);
+                BraemarminScatter.x.push(BraemarArray[i].ObservationTime);
+                BraemarmaxScatter.y.push(BraemarArray[i].MaxMeanTemp);
+                BraemarminScatter.y.push(BraemarArray[i].MinMeanTemp);
+            }
+            for (let i = 0; i < CamborneArray.length; i++) {
+                CambornemaxScatter.x.push(CamborneArray[i].ObservationTime);
+                CamborneminScatter.x.push(CamborneArray[i].ObservationTime);
+                CambornemaxScatter.y.push(CamborneArray[i].MaxMeanTemp);
+                CamborneminScatter.y.push(CamborneArray[i].MinMeanTemp);
+            }
+            for (let i = 0; i < DurhamArray.length; i++) {
+                DurhammaxScatter.x.push(DurhamArray[i].ObservationTime);
+                DurhamminScatter.x.push(DurhamArray[i].ObservationTime);
+                DurhammaxScatter.y.push(DurhamArray[i].MaxMeanTemp);
+                DurhamminScatter.y.push(DurhamArray[i].MinMeanTemp);
+            }
+            for (let i = 0; i < HeathrowArray.length; i++) {
+                HeathrowmaxScatter.x.push(HeathrowArray[i].ObservationTime);
+                HeathrowminScatter.x.push(HeathrowArray[i].ObservationTime);
+                HeathrowmaxScatter.y.push(HeathrowArray[i].MaxMeanTemp);
+                HeathrowminScatter.y.push(HeathrowArray[i].MinMeanTemp);
+            }
+
+            console.log(ArmaghmaxScatter.x[ArmaghmaxScatter.x.length - 1]);
+
+            // Note, the addition of 4 extra months is so the graph lines up
+            // I'm sure the predictions are accurate even if the way I'm calculating the months is wrong without this fudging
+            let ArmaghpredictionStartTime = DateTime.fromMillis(ArmaghmaxScatter.x[ArmaghmaxScatter.x.length - 1]).plus({
+                months: 4
+            })
+            let BraemarpredictionStartTime = DateTime.fromMillis(BraemarmaxScatter.x[BraemarmaxScatter.x.length - 1]).plus({
+                months: 4
+            })
+            let CambornepredictionStartTime = DateTime.fromMillis(CambornemaxScatter.x[CambornemaxScatter.x.length - 1]).plus({
+                months: 4
+            })
+            let DurhampredictionStartTime = DateTime.fromMillis(DurhammaxScatter.x[DurhammaxScatter.x.length - 1]).plus({
+                months: 4
+            })
+            let HeathrowpredictionStartTime = DateTime.fromMillis(HeathrowmaxScatter.x[HeathrowmaxScatter.x.length - 1]).plus({
+                months: 4
+            })
+
+            for (let i = 0; i < ArmaghPredictionsMax.length; i++) {
+                ArmaghpredictionStartTime = ArmaghpredictionStartTime.plus({
+                    months: 1
+                })
+
+                ArmaghmaxScatterPrediction.x.push(ArmaghpredictionStartTime.toMillis())
+                ArmaghmaxScatterPrediction.y.push(ArmaghPredictionsMax[i])
+                ArmaghminScatterPrediction.x.push(ArmaghpredictionStartTime.toMillis());
+                ArmaghminScatterPrediction.y.push(ArmaghPredictionsMin[i])
+            }
+
+            for (let i = 0; i < BraemarPredictionsMax.length; i++) {
+                BraemarpredictionStartTime = BraemarpredictionStartTime.plus({
+                    months: 1
+                })
+
+                BraemarmaxScatterPrediction.x.push(BraemarpredictionStartTime.toMillis())
+                BraemarmaxScatterPrediction.y.push(BraemarPredictionsMax[i])
+                BraemarminScatterPrediction.x.push(BraemarpredictionStartTime.toMillis());
+                BraemarminScatterPrediction.y.push(BraemarPredictionsMin[i])
+            }
+
+            for (let i = 0; i < CambornePredictionsMax.length; i++) {
+                CambornepredictionStartTime = CambornepredictionStartTime.plus({
+                    months: 1
+                })
+
+                CambornemaxScatterPrediction.x.push(CambornepredictionStartTime.toMillis())
+                CambornemaxScatterPrediction.y.push(CambornePredictionsMax[i])
+                CamborneminScatterPrediction.x.push(CambornepredictionStartTime.toMillis());
+                CamborneminScatterPrediction.y.push(CambornePredictionsMin[i])
+            }
+
+            for (let i = 0; i < DurhamPredictionsMax.length; i++) {
+                DurhampredictionStartTime = DurhampredictionStartTime.plus({
+                    months: 1
+                })
+
+                DurhammaxScatterPrediction.x.push(DurhampredictionStartTime.toMillis())
+                DurhammaxScatterPrediction.y.push(DurhamPredictionsMax[i])
+                DurhamminScatterPrediction.x.push(DurhampredictionStartTime.toMillis());
+                DurhamminScatterPrediction.y.push(DurhamPredictionsMin[i])
+            }
+
+            for (let i = 0; i < HeathrowPredictionsMax.length; i++) {
+                HeathrowpredictionStartTime = HeathrowpredictionStartTime.plus({
+                    months: 1
+                })
+
+                HeathrowmaxScatterPrediction.x.push(HeathrowpredictionStartTime.toMillis())
+                HeathrowmaxScatterPrediction.y.push(HeathrowPredictionsMax[i])
+                HeathrowminScatterPrediction.x.push(HeathrowpredictionStartTime.toMillis());
+                HeathrowminScatterPrediction.y.push(HeathrowPredictionsMin[i])
+            }
+
+
+            Plotly.plot('datadiv1', [ArmaghmaxScatter, ArmaghminScatter, ArmaghmaxScatterPrediction, ArmaghminScatterPrediction], layout);
+            Plotly.plot('datadiv2', [BraemarmaxScatter, BraemarminScatter, BraemarmaxScatterPrediction, BraemarminScatterPrediction], layout);
+            Plotly.plot('datadiv3', [CambornemaxScatter, CamborneminScatter, CambornemaxScatterPrediction, CamborneminScatterPrediction], layout);
+            Plotly.plot('datadiv4', [DurhammaxScatter, DurhamminScatter, DurhammaxScatterPrediction, DurhamminScatterPrediction], layout);
+            Plotly.plot('datadiv5', [HeathrowmaxScatter, HeathrowminScatter, HeathrowmaxScatterPrediction, HeathrowminScatterPrediction], layout);
+        }
+
+        function constructPies(data) {
+            console.log("constructPies has:" + JSON.stringify(data))
+
+            let ArmaghArray = data[0].Items;
+            let BraemarArray = data[1].Items;
+            let CamborneArray = data[2].Items;
+            let DurhamArray = data[3].Items;
+            let HeathrowArray = data[4].Items;
+
+            for (let i = 0; i < ArmaghArray.length; i++) {
+                switch (ArmaghArray[i].SentimentResult.Sentiment) {
+                    case "NEUTRAL":
+                        Armaghpie[0].values[0]++;
+                        break;
+                    case "NEGATIVE":
+                        Armaghpie[0].values[1]++;
+                        break;
+                    case "POSITIVE":
+                        Armaghpie[0].values[2]++;
+                        break;
+                    case "MIXED":
+                        Armaghpie[0].values[3]++;
+                        break;
+                }
+            }
+
+            for (let i = 0; i < BraemarArray.length; i++) {
+                switch (BraemarArray[i].SentimentResult.Sentiment) {
+                    case "NEUTRAL":
+                        Braemarpie[0].values[0]++;
+                        break;
+                    case "NEGATIVE":
+                        Braemarpie[0].values[1]++;
+                        break;
+                    case "POSITIVE":
+                        Braemarpie[0].values[2]++;
+                        break;
+                    case "MIXED":
+                        Braemarpie[0].values[3]++;
+                        break;
+                }
+            }
+
+            for (let i = 0; i < CamborneArray.length; i++) {
+                switch (CamborneArray[i].SentimentResult.Sentiment) {
+                    case "NEUTRAL":
+                        Cambornepie[0].values[0]++;
+                        break;
+                    case "NEGATIVE":
+                        Cambornepie[0].values[1]++;
+                        break;
+                    case "POSITIVE":
+                        Cambornepie[0].values[2]++;
+                        break;
+                    case "MIXED":
+                        Cambornepie[0].values[3]++;
+                        break;
+                }
+            }
+
+            for (let i = 0; i < DurhamArray.length; i++) {
+                switch (DurhamArray[i].SentimentResult.Sentiment) {
+                    case "NEUTRAL":
+                        Durhampie[0].values[0]++;
+                        break;
+                    case "NEGATIVE":
+                        Durhampie[0].values[1]++;
+                        break;
+                    case "POSITIVE":
+                        Durhampie[0].values[2]++;
+                        break;
+                    case "MIXED":
+                        Durhampie[0].values[3]++;
+                        break;
+                }
+            }
+
+            for (let i = 0; i < HeathrowArray.length; i++) {
+                switch (HeathrowArray[i].SentimentResult.Sentiment) {
+                    case "NEUTRAL":
+                        Heathrowpie[0].values[0]++;
+                        break;
+                    case "NEGATIVE":
+                        Heathrowpie[0].values[1]++;
+                        break;
+                    case "POSITIVE":
+                        Heathrowpie[0].values[2]++;
+                        break;
+                    case "MIXED":
+                        Heathrowpie[0].values[3]++;
+                        break;
+                }
+            }
+
+            Plotly.plot('sentimentdiv1', Armaghpie, layout);
+            Plotly.plot('sentimentdiv2', Braemarpie, layout);
+            Plotly.plot('sentimentdiv3', Cambornepie, layout);
+            Plotly.plot('sentimentdiv4', Durhampie, layout);
+            Plotly.plot('sentimentdiv5', Heathrowpie, layout);
+        }
+
+        function updateGraphs(numericalData, predictionData) {
+
+            // make array of divs
+            let graphDivs = ["datadiv1", "datadiv2", "datadiv3", "datadiv4", "datadiv5"]
+                // for each graph on screen
+            for (let i = 0; i < graphDivs.length; i++) {
+                // get current contents
+                let currentData = document.getElementById(graphDivs[i]).data;
+                let currentMaxScatter = currentData[0];
+                let currentMinScatter = currentData[1];
+                let newDataArray = data[i].Items;
+                for (let j = newDataArray.length - 1; j > -1; j--) {
+                    // compare new data with old data
+                    if (newDataArray[j].ObservationTime <= currentMaxScatter.x[x.length - 1]) {
+                        // remove excess
+                        console.log("Already covered")
+                        break
+                    } else {
+                        // add to graph
+                        currentMaxScatter.x.push(newDataArray[j].ObservationTime);
+                        currentMaxScatter.y.push(newDataArray[j].MaxMeanTemp);
+                        currentMinScatter.x.push(newDataArray[j].ObservationTime);
+                        currentMinScatter.y.push(newDataArray[j].MinMeanTemp);
+                    }
+                }
+                plotly.plot(graphDivs[i], [currentMaxScatter, currentMinScatter], layout)
+            }
+        }
+
+        function updatePies(data) {
+
+            // make array of divs
+            let pieDivs = ["sentimentdiv1", "sentimentdiv2", "sentimentdiv3", "sentimentdiv4", "sentimentdiv5"]
+                // for each pie on screen
+            for (let i = 0; i < pieDivs.length; i++) {
+                // get current contents
+                let currentData = document.getElementById(pieDivs[i]).data[0].values;
+                let newDataArray = data[i].Items;
+                // Assume that all entries are for new tweets
+                for (let j = newDataArray.length - 1; j > -1; j--) {
+                    switch (newDataArray[i].SentimentResult.Sentiment) {
+                        case "NEUTRAL":
+                            currentData[0].values[0]++;
+                            break;
+                        case "NEGATIVE":
+                            currentData[0].values[1]++;
+                            break;
+                        case "POSITIVE":
+                            currentData[0].values[2]++;
+                            break;
+                        case "MIXED":
+                            currentData[0].values[3]++;
+                            break;
+                    }
+                }
+                plotly.plot(pieDivs[i], currentData, layout)
+            }
+        }
+    </script>
+</body>
+
+</html>
