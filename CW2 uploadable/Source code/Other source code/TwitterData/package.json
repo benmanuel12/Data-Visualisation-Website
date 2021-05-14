@@ -1,0 +1,20 @@
+{
+  "name": "twitterdata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "aws-sdk": "^2.837.0",
+    "dotenv": "^8.2.0",
+    "moment": "^2.29.1",
+    "twitter": "^1.7.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.25"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -272,7 +272,7 @@
 
         let layout = {
             height: 400,
-            width: 500
+            width: 600
         };
 
 
@@ -383,32 +383,32 @@
             let DurhamPredictionsMin = predictionData[3].Items[1].Data.predictions[0].mean;
             let HeathrowPredictionsMin = predictionData[4].Items[1].Data.predictions[0].mean;
 
-            for (let i = 0; i < ArmaghArray.length; i++) {
+            for (let i = ArmaghArray.length - 1; i > -1; i--) {
                 ArmaghmaxScatter.x.push(ArmaghArray[i].ObservationTime);
                 ArmaghminScatter.x.push(ArmaghArray[i].ObservationTime);
                 ArmaghmaxScatter.y.push(ArmaghArray[i].MaxMeanTemp);
                 ArmaghminScatter.y.push(ArmaghArray[i].MinMeanTemp);
             }
 
-            for (let i = 0; i < BraemarArray.length; i++) {
+            for (let i = BraemarArray.length - 1; i > -1; i--) {
                 BraemarmaxScatter.x.push(BraemarArray[i].ObservationTime);
                 BraemarminScatter.x.push(BraemarArray[i].ObservationTime);
                 BraemarmaxScatter.y.push(BraemarArray[i].MaxMeanTemp);
                 BraemarminScatter.y.push(BraemarArray[i].MinMeanTemp);
             }
-            for (let i = 0; i < CamborneArray.length; i++) {
+            for (let i = CamborneArray.length - 1; i > -1; i--) {
                 CambornemaxScatter.x.push(CamborneArray[i].ObservationTime);
                 CamborneminScatter.x.push(CamborneArray[i].ObservationTime);
                 CambornemaxScatter.y.push(CamborneArray[i].MaxMeanTemp);
                 CamborneminScatter.y.push(CamborneArray[i].MinMeanTemp);
             }
-            for (let i = 0; i < DurhamArray.length; i++) {
+            for (let i = DurhamArray.length - 1; i > -1; i--) {
                 DurhammaxScatter.x.push(DurhamArray[i].ObservationTime);
                 DurhamminScatter.x.push(DurhamArray[i].ObservationTime);
                 DurhammaxScatter.y.push(DurhamArray[i].MaxMeanTemp);
                 DurhamminScatter.y.push(DurhamArray[i].MinMeanTemp);
             }
-            for (let i = 0; i < HeathrowArray.length; i++) {
+            for (let i = HeathrowArray.length - 1; i > -1; i--) {
                 HeathrowmaxScatter.x.push(HeathrowArray[i].ObservationTime);
                 HeathrowminScatter.x.push(HeathrowArray[i].ObservationTime);
                 HeathrowmaxScatter.y.push(HeathrowArray[i].MaxMeanTemp);
@@ -417,25 +417,26 @@
 
             console.log(ArmaghmaxScatter.x[ArmaghmaxScatter.x.length - 1]);
 
-            // Note, the addition of 4 extra months is so the graph lines up
+            // This code just massages the data so the lines line up
+            // I think I messed up defining the range of test data and predictions but I'm running out of time to redo the whole predictions again.
             // I'm sure the predictions are accurate even if the way I'm calculating the months is wrong without this fudging
-            let ArmaghpredictionStartTime = DateTime.fromMillis(ArmaghmaxScatter.x[ArmaghmaxScatter.x.length - 1]).plus({
-                months: 4
+            let ArmaghpredictionStartTime = DateTime.fromMillis(ArmaghmaxScatter.x[ArmaghmaxScatter.x.length - 1]).minus({
+                months: 3
             })
-            let BraemarpredictionStartTime = DateTime.fromMillis(BraemarmaxScatter.x[BraemarmaxScatter.x.length - 1]).plus({
-                months: 4
+            let BraemarpredictionStartTime = DateTime.fromMillis(BraemarmaxScatter.x[BraemarmaxScatter.x.length - 1]).minus({
+                months: 3
             })
-            let CambornepredictionStartTime = DateTime.fromMillis(CambornemaxScatter.x[CambornemaxScatter.x.length - 1]).plus({
-                months: 4
+            let CambornepredictionStartTime = DateTime.fromMillis(CambornemaxScatter.x[CambornemaxScatter.x.length - 1]).minus({
+                months: 3
             })
-            let DurhampredictionStartTime = DateTime.fromMillis(DurhammaxScatter.x[DurhammaxScatter.x.length - 1]).plus({
-                months: 4
+            let DurhampredictionStartTime = DateTime.fromMillis(DurhammaxScatter.x[DurhammaxScatter.x.length - 1]).minus({
+                months: 3
             })
-            let HeathrowpredictionStartTime = DateTime.fromMillis(HeathrowmaxScatter.x[HeathrowmaxScatter.x.length - 1]).plus({
-                months: 4
+            let HeathrowpredictionStartTime = DateTime.fromMillis(HeathrowmaxScatter.x[HeathrowmaxScatter.x.length - 1]).minus({
+                months: 3
             })
 
-            for (let i = 0; i < ArmaghPredictionsMax.length; i++) {
+            for (let i = ArmaghPredictionsMax.length - 1; i > -1; i--) {
                 ArmaghpredictionStartTime = ArmaghpredictionStartTime.plus({
                     months: 1
                 })
@@ -446,7 +447,7 @@
                 ArmaghminScatterPrediction.y.push(ArmaghPredictionsMin[i])
             }
 
-            for (let i = 0; i < BraemarPredictionsMax.length; i++) {
+            for (let i = BraemarPredictionsMax.length - 1; i > -1; i--) {
                 BraemarpredictionStartTime = BraemarpredictionStartTime.plus({
                     months: 1
                 })
@@ -457,7 +458,7 @@
                 BraemarminScatterPrediction.y.push(BraemarPredictionsMin[i])
             }
 
-            for (let i = 0; i < CambornePredictionsMax.length; i++) {
+            for (let i = CambornePredictionsMax.length - 1; i > -1; i--) {
                 CambornepredictionStartTime = CambornepredictionStartTime.plus({
                     months: 1
                 })
@@ -468,7 +469,7 @@
                 CamborneminScatterPrediction.y.push(CambornePredictionsMin[i])
             }
 
-            for (let i = 0; i < DurhamPredictionsMax.length; i++) {
+            for (let i = DurhamPredictionsMax.length - 1; i > -1; i--) {
                 DurhampredictionStartTime = DurhampredictionStartTime.plus({
                     months: 1
                 })
@@ -479,7 +480,7 @@
                 DurhamminScatterPrediction.y.push(DurhamPredictionsMin[i])
             }
 
-            for (let i = 0; i < HeathrowPredictionsMax.length; i++) {
+            for (let i = HeathrowPredictionsMax.length - 1; i > -1; i--) {
                 HeathrowpredictionStartTime = HeathrowpredictionStartTime.plus({
                     months: 1
                 })

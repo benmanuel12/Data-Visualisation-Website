@@ -1,0 +1,16 @@
+{
+  "name": "syntheticslicer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.865.0",
+    "luxon": "^1.26.0",
+    "plotly": "^1.0.6"
+  }
+}
