@@ -1,4 +1,4 @@
-# Data-Visualisation-Website-stuff
+# Data-Visualisation-Website
 
 This is the collated code for a 3rd year university web development project I did.
 It involved using Javascript and Typescript APIs to grab tweet data from Twitter and weather data from the Met Office, uploading it to Amazon Web Services DynamoDB, and using Comprehend and Sagemaker respectively on the data for sentiments and predictions
@@ -8,8 +8,18 @@ The front end is written in HTML and CSS and hosted on S3
 It then makes GET requests to an API on API Gateway to request data
 Plotly is used to convert the data to graphs.
 
-Disclaimer: While this all worked when I had to submit the work, the cloud components are/were (depending on when you read this) running on a limited budget.
-Here is the URL it is hosted at: https://cst3130-benmanuel-final-webpage.s3.amazonaws.com/index.html.
-If the above url is broken, the cloud components have most likely run out of credit.
-In this repository is every necessary program and microservice for it to run, although it is missing the API gateway, DynamoDB tables and SageMaker endpoints, models and configs
-So, this repository is more of an archive of the code that I wrote for it, rather than a working prototype, which is why the name of the repository includes the word "stuff" as unlike my other repositories, this does not at minimum contain demonstratable working code
+Required other repositories for other parts of the code
+https://github.com/benmanuel12/Twitter-API-User
+https://github.com/benmanuel12/DataVisualisationWebsite-DataFetcher
+
+## Built with
+- JavaScript, TypeScript, HTML, CSS, AWS
+
+## Features
+- Assembles data from AWS and Twitter into a cohesive dashboard
+- Predicts upcoming weather for locations with machine learning
+- Measures sentiment of tweets for locations
+
+## Running it
+- This is not designed to be run as-is, because the AWS code is no longer hosted, and the Twitter code is out of date since Twitter rebranded
+- This is just a repository to show what I did write when it worked
